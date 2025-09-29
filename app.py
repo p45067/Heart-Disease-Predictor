@@ -43,13 +43,22 @@ input_data = pd.DataFrame({
 # Preprocess the input data (one-hot encoding - consistent with training)
 input_data_encoded = pd.get_dummies(input_data, columns=['Sex', 'ChestPainType', 'RestingECG', 'ExerciseAngina', 'ST_Slope'], drop_first=True)
 
-# Ensure all columns from training data are present in input data and in the same order
-# This is crucial for the model prediction
-for col in X_train.columns:
+# Define the expected columns based on the training data
+# This assumes the original categorical columns and their unique values remain consistent
+expected_columns = ['Age', 'RestingBP', 'Cholesterol', 'FastingBS', 'MaxHR', 'Oldpeak',
+                    'Sex_M',
+                    'ChestPainType_ATA', 'ChestPainType_NAP', 'ChestPainType_TA',
+                    'RestingECG_Normal', 'RestingECG_ST',
+                    'ExerciseAngina_Y',
+                    'ST_Slope_Flat', 'ST_Slope_Up']
+
+
+# Ensure all expected columns are present in input data and in the same order
+for col in expected_columns:
     if col not in input_data_encoded.columns:
         input_data_encoded[col] = 0
 
-input_data_encoded = input_data_encoded[X_train.columns]
+input_data_encoded = input_data_encoded[expected_columns]
 
 
 # Predict and display the result
